@@ -10,12 +10,16 @@
   </teleport>
 
   <div class="options">
-    <button @click="showPastEvents = !showPastEvents">Show past events</button>
-    <button @click="setForm(null)">Show form</button>
+    <div class="option_buttons">
+      <button @click="showPastEvents = !showPastEvents">Show past events</button>
+      <button @click="greyOut = !greyOut">&#11024;</button>
+    </div>
+    <button @click="setForm(null)">+</button>
   </div>
   <ul>
     <li v-for="event in orderedEvents" :key="event.id" @click="setForm(event.id)">
       <Event
+        :style="greyOut ? {backgroundColor: 'lightslategray', color: '#454444'} : ''"
         :event="event"
         :daysLeft="daysLeft(event)"
         :showPastEvents="showPastEvents"
@@ -93,6 +97,7 @@ const events = [
         showPastEvents: false,
         showForm: false,
         currentEvent: null,
+        greyOut: false,
       }
     },
     methods: {
@@ -148,4 +153,26 @@ const events = [
     list-style: none;
     cursor: pointer;
   }
+  .options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .options > button {
+    font-size: 3rem;
+    color: rgb(92, 84, 84);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .option_buttons > button {
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    background: none;
+    border-radius: 1rem;
+    border: 2px lightblue solid;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
 </style>
