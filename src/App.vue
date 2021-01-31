@@ -1,8 +1,10 @@
 <template>
   <teleport to="#modal">
-    <form v-if="showForm">
-      <input type="text">
-    </form>
+    <AddUpdateForm
+      v-if="showForm"
+      @close-modal="showForm = !showForm"
+      @add-new-event="addEvent($event)"
+    />
   </teleport>
 
   <div class="options">
@@ -74,11 +76,13 @@ const events = [
 ];
 
   import Event from '@/components/Event';
+  import AddUpdateForm from '@/components/AddUpdateForm';
 
   export default {
     name: "App",
     components: {
-      Event
+      Event,
+      AddUpdateForm
     },
     data() {
       return {
@@ -88,6 +92,13 @@ const events = [
       }
     },
     methods: {
+      addEvent(event) {
+        this.events.push({
+          id: this.events.length + 1,
+          ...event
+        });
+        this.showForm = false;
+      },
       daysLeft(event) {
         const time = Date.parse(event.date) - Date.now();
         return Math.ceil(time / (1000 * 3600 * 24));
