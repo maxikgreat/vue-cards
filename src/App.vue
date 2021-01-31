@@ -1,26 +1,118 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <teleport to="#modal">
+    <form v-if="showForm">
+      <input type="text">
+    </form>
+  </teleport>
+
+  <div class="options">
+    <button @click="showPastEvents = !showPastEvents">Show past events</button>
+    <button @click="showForm = !showForm">Show form</button>
+  </div>
+  <ul>
+    <li v-for="event in orderedEvents" :key="event.id">
+      <Event
+        :event="event"
+        :daysLeft="daysLeft(event)"
+        :showPastEvents="showPastEvents"
+      />
+    </li>
+  </ul>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+const events = [
+  {
+    id: 1,
+    name: "Graduation",
+    details: "wooohoo!!!",
+    date: "2020-09-25",
+    background: "#F34949",
+  },
+  {
+    id: 2,
+    name: "Holidays",
+    details: "wooohoo!!!",
+    date: "2021-12-30",
+    background: "#f9f970",
+  },
+  {
+    id: 3,
+    name: "HolidayYYYY",
+    details: "Get me outta here!",
+    date: "2020-09-12",
+    background: "#7AD3F0",
+  },
+  {
+    id: 4,
+    name: "Birthday",
+    details: "My birthday party",
+    date: "2020-10-02",
+    background: "#F07AEC",
+  },
+  {
+    id: 5,
+    name: "Christmas",
+    details: "ho ho ho",
+    date: "2020-03-5",
+    background: "#EB9A0F",
+  },
+  {
+    id: 6,
+    name: "Conference Talk",
+    details: "dont flop",
+    date: "2021-02-28",
+    background: "#68EE94",
+  },
+  {
+    id: 7,
+    name: "Today party",
+    details: "dont flop",
+    date: "2021-01-31",
+    background: "#990303",
+  },
+];
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  import Event from '@/components/Event';
+
+  export default {
+    name: "App",
+    components: {
+      Event
+    },
+    data() {
+      return {
+        events,
+        showPastEvents: false,
+        showForm: false
+      }
+    },
+    methods: {
+      daysLeft(event) {
+        const time = Date.parse(event.date) - Date.now();
+        return Math.ceil(time / (1000 * 3600 * 24));
+      }
+    },
+    computed: {
+      orderedEvents() {
+        return events.sort((a, b) => this.daysLeft(a) > this.daysLeft(b) ? 1 : -1)
+      }
+    }
+  };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  ul {
+    padding: 0;
+  }
+  li {
+    list-style: none;
+    cursor: pointer;
+  }
 </style>
